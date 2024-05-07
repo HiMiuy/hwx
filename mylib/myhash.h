@@ -1,6 +1,7 @@
 #ifndef _MYHASH_H_
 #define _MYHASH_H_
 
+#include "headers.h"
 #define MOD31 2147483647
 #define MOD61 2305843009213693952
 #define PI 3.141592653589793

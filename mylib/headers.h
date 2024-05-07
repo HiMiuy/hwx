@@ -13,5 +13,7 @@
 #include "myhash.h"
 #include "myltrace.h"
 
+typedef u_int32_t uint32_t;
+
 
 #endif

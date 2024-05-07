@@ -1,6 +1,14 @@
 # Get the number of packets in report time interval
 
 This is a C language implementation the number of packets in report time interval you decide using Libtrace.
+I ran it only in Ubuntu18 environment.
+
+## Requirement
+- python3
+- cmake(?)
+- C
+- Libtrace ([Libtrace](https://github.com/LibtraceTeam/libtrace))
+
 
 1. Initialize an environment to output the result as figure with:
 ```bash

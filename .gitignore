@@ -1,0 +1,5 @@
+# ignore files and folders
+build/
+bashf.sh
+.venv/
+.DS_store
