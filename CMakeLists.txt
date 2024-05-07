@@ -1,0 +1,16 @@
+# 
+cmake_minimum_required(VERSION 3.20)
+project(main_pkt C)
+set(CMAKE_C_FLAGS "-Wall -Wextra")
+set(CMAKE_C_FLAGS_DEBUG "-g3")
+set(CMAKE_C_FLAGS_RELEASE "-O2")
+include_directories(./mylib/)
+
+file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/mylib/*.h")
+file(GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/mylib/*.c")
+file(GLOB SOURCE  "main_pkt.c")
+message(PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+#include(CMakePrintHelpers)
+#cmake_print_variables(${HEADERS})
+add_executable(${PROJECT_NAME} ${SOURCES} ${SOURCE})
+target_link_libraries(${PROJECT_NAME} trace m)
