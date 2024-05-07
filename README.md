@@ -9,7 +9,7 @@ I ran it only in Ubuntu18 environment.
 - C
 - Libtrace ([Libtrace](https://github.com/LibtraceTeam/libtrace))
 
-
+## Execution
 1. Initialize an environment to output the result as figure with:
 ```bash
 # Use source
