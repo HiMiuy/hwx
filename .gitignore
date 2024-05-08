@@ -3,3 +3,5 @@ build/
 bashf.sh
 .venv/
 .DS_store
+output/csv/*.json
+data/

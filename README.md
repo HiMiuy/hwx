@@ -2,12 +2,13 @@
 
 This is a C language implementation the number of packets in report time interval you decide using Libtrace.
 I ran it only in Ubuntu18 environment.
+I want to practice how to use Github, make, and cmake.
 
 ## Requirement
 - python3
-- cmake(?)
+- cmake (Practice to use)
 - C
-- Libtrace ([Libtrace](https://github.com/LibtraceTeam/libtrace))
+- [Libtrace](https://github.com/LibtraceTeam/libtrace)
 
 ## Execution
 1. Initialize an environment to output the result as figure with:
@@ -16,7 +17,7 @@ I ran it only in Ubuntu18 environment.
 source ./setup.sh
 or
 bash ./setupy.sh
-source venv/bin/activate
+source .venv/bin/activate
 ```
 
 2. Execute program with:
@@ -24,7 +25,8 @@ source venv/bin/activate
 # The result is placed in ./output
 bash make.sh
 or
-./build/main_pkt "filename of pcap" "observation time"
+./build/main_pkt "filename of pcap" "observation time" "observe"
+python plot1.py -t "observation time" -v "observe"
 ```
 
 3. Clean up env with:
