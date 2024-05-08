@@ -3,10 +3,10 @@ set -ue
 ## ========== PARAMETERS ========== 
 FILENAME="./data/mawi/201902011400_20190201140000.pcap"
 FILENAME="./data/mawi/201902011400.pcap"
-
+FILENAME="./../hw0/data/mawi/201902011400.pcap"
 REPORT_TIME=1
-VERBOSE=0
-CMAKE=1
+VERBOSE=1
+CMAKE=0
 ARGS="${FILENAME} ${REPORT_TIME} ${VERBOSE}"
 
 ## Make dir ##

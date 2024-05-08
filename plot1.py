@@ -28,6 +28,17 @@ def FigReadJson(readfilename):
 def FigRead(readfilename):
     data = np.loadtxt(readfilename, comments='#', delimiter=',')
     return data    
+def FigReadSpace(readfilename):
+    all_data = []
+    with open(readfilename) as f:
+        for line in f:
+            data_line = line.split(' ')
+            data = []
+            for val in data_line:
+                if val != '\n' and val != '':
+                    data.append(int(val))
+            all_data.append(data)
+    return np.array(all_data)
 def FigGet(ver, hor):
     fig = plt.figure(figsize=(ver,hor))
     fig1 = fig.add_subplot(111)
@@ -76,6 +87,29 @@ def FigMAPlot(window_size=10):
     x_mv = np.arange(len(y_mv))
 
     fig1.plot(x_mv, y_mv, label='WS={}'.format(window_size))
+def FigBin():
+    dshape = data_bin.shape
+    if dshape[0] == 1:
+        fig, fig1  = FigGet(ver=10, hor=5) # Set fig
+        fig1.set_xlabel('bins (IAT)', fontsize=25)
+        fig1.set_ylabel('Frequency', fontsize=25)
+        bins = np.arange(0, len(data_bin[0]))
+        plt.yscale('log')
+        plt.bar(bins, data_bin[0])
+        outfilename  = "./output/png/lastbin{}.png".format(args.time)
+        plt.savefig(outfilename, bbox_inches="tight", pad_inches=0.05)
+    else:
+        time_step = 0
+        for one_data in data_bin:
+            fig, fig1  = FigGet(ver=10, hor=5) # Set fig
+            fig1.set_xlabel('bins (IAT)', fontsize=25)
+            fig1.set_ylabel('Frequency', fontsize=25)
+            bins = np.arange(0, len(one_data))
+            plt.bar(bins, one_data)
+            outfilename  = "./output/png/bin_ts{}.png".format(time_step)
+            plt.savefig(outfilename, bbox_inches="tight", pad_inches=0.05)
+            time_step += 1
+
 def FigBar():
     global args
     fig = plt.figure(figsize=(7,7))
@@ -120,21 +154,22 @@ def main(args):
     data       = FigRead(readfilename) # Read and get data
     fig, fig1  = FigGet(ver=10, hor=5) # Set fig
     FigPlot()                   # Plot raw results
-    FigMAPlot(window_size=100)  # Plot the result of moving average
+    FigMAPlot(window_size=10)  # Plot the result of moving average
+    FigMAPlot(window_size=50)  # Plot the result of moving average
+    #FigMAPlot(window_size=100)  # Plot the result of moving average
     FigMAPlot(window_size=500)  # Plot the result of moving average
     FigMAPlot(window_size=1000) # Plot the result of moving average
     #plt.show()
     fig1.legend(ncol=4)         # Number of legends
     plt.savefig(outfilename, bbox_inches="tight", pad_inches=0.05)
     
-
-    if args.verbose:
-        readfilename_bin = "./output/csv/binraw{}.json".format(args.time)
-        outfilename  = "./output/png/bin{}.png".format(args.time)
-        data_bin   = FigReadJson(readfilename_bin)
-        #fig, fig1 = FigBar()
-        FigBar()
-        #plt.show()
+    
+    readfilename_bin = "./output/csv/bin{}.csv".format(args.time)
+    outfilename  = "./output/png/bin{}.png".format(args.time)
+    data_bin   = FigReadSpace(readfilename_bin)
+    FigParams()                        # Set params
+    
+    FigBin()
     
 
 if __name__ == "__main__":
