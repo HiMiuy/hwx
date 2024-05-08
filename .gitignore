@@ -5,3 +5,6 @@ bashf.sh
 .DS_store
 output/csv/*.json
 data/
+*.o
+pkt.o.dSYM/
+main_cms.c
