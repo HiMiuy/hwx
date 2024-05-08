@@ -82,10 +82,7 @@ def FigBar():
     ax = fig.add_subplot(111, projection='3d')
     bin_size = 16
     iat_max = 0
-    for i in data_bin.keys():
-        tmp_max = max(data_bin[i])
-        iat_max = max(tmp_max, iat_max)
-    time_bin = np.arange(0,iat_max,)
+    print("Checking bins...")
     for i in data_bin.keys():
         try:
             ## Inter-arival time
@@ -104,7 +101,7 @@ def FigBar():
 
             ax.bar3d(xpos, ypos, zpos, dx, dy, dz, color='red')
         except KeyboardInterrupt:
-            print(" stop.")
+            print(" stop. timestep: {}".format(i))
             #plt.show()
             #return fig, ax
             break
