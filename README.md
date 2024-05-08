@@ -25,8 +25,8 @@ source .venv/bin/activate
 # The result is placed in ./output
 bash make.sh
 or
-./build/main_pkt "filename of pcap" "observation time" "observe"
-python plot1.py -t "observation time" -v "observe"
+./build/main_pkt "filename of pcap" "observation time" "verbose"
+python plot1.py -t "observation time" -v "verbose"
 ```
 
 3. Clean up env with:
