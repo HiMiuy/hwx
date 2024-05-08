@@ -8,7 +8,8 @@ FILENAME   ="./data/mawi/201902011400_20190201140000.pcap"
 FILENAME   ="../hw0/data/mawi/201902011400.pcap"
 REPORT_TIME= 1
 VERBOSE = 0
-ARGS = $(FILENAME) $(REPORT_TIME) $(VERBOSE)
+BIN=1 # micro sec
+ARGS = $(FILENAME) $(REPORT_TIME) $(VERBOSE) $(BIN)
 
 all: pktrun #cmsrun
 

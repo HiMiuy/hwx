@@ -40,12 +40,14 @@ void my_program(libtrace_t *trace, libtrace_packet_t *packet, char* argv[]) {
     READ_PCAP = argv[1];
     double REPORT_TIME = atof(argv[2]);
     bool VERBOSE       = atoi(argv[3]);
+    int  ONE_BINSIZE   = atoi(argv[4]);
     double next_report = 0;
     double prepkt_time = 0;
     int    time_step   = 0;
     /* Output parameters */
     printf("Read file        : %s\n", READ_PCAP);
-    printf("Observation time : %f\n",REPORT_TIME);
+    printf("Observation time : %f\n", REPORT_TIME);
+    printf("One bin size     : %d [micro sec]\n", ONE_BINSIZE);
 
     bin = (uint64_t*)calloc(BIN, sizeof(uint64_t));
     int now_binsize = BIN;
@@ -75,7 +77,7 @@ void my_program(libtrace_t *trace, libtrace_packet_t *packet, char* argv[]) {
             //double bin_size = 2;
             //int pos = diff_time/bin_size;
 
-            double bin_size = 2;
+            double bin_size = ONE_BINSIZE;
             //int pos = (int)diff_time >> (int)bin_size;
             int pos = diff_time/bin_size;
             while(pos >= now_binsize) {
@@ -109,7 +111,8 @@ void my_program(libtrace_t *trace, libtrace_packet_t *packet, char* argv[]) {
     FILE *outfilebin;
     char outbin[100] = "./output/csv/bin";
     strcat(outbin, argv[2]);
-    strcat(outbin, ".csv");
+    strcat(outbin, argv[3]);
+    strcat(outbin, "ms.csv");
     outfilebin     = fopen(outbin, "w");
     int i;
     
