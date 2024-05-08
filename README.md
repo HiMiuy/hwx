@@ -1,5 +1,5 @@
 # Get the number of packets in report time interval
-
+Results are placed in `output/png/` <br>
 This is a C language implementation the number of packets in report time interval you decide using Libtrace.
 I ran it only in Ubuntu18 environment.
 I want to practice how to use Github, make, and cmake.
