@@ -4,12 +4,11 @@ LTRACEF = -ltrace
 INCLUDE = -I./mylib
 PKT_SOURCE = ./mylib/myltrace.c ./mylib/myhash.c
 PKT_HEADER = $(patsubst %.c,%.h, $(PKT_SOURCE))
-FILENAME   ="./data/mawi/201902011400_20190201140000.pcap"
-FILENAME   ="../hw0/data/mawi/201902011400.pcap"
+FILENAME   ="../../data/mawi/201902011400.pcap"
 REPORT_TIME= 1
 VERBOSE = 0
-BIN=1 # micro sec
-ARGS = $(FILENAME) $(REPORT_TIME) $(VERBOSE) $(BIN)
+POWEROF2=2  # the power of 2
+ARGS = $(FILENAME) $(REPORT_TIME) $(VERBOSE) $(POWEROF2)
 
 all: pktrun #cmsrun
 

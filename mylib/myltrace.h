@@ -8,7 +8,7 @@ extern void per_packet(libtrace_packet_t*);
 extern void output_csv(FILE*, double, int);
 extern uint64_t countv4;
 extern uint64_t countv6;
-#define BIN 2
+#define BIN 10
 //extern uint64_t bin[BIN];
 extern uint64_t *bin;
 

@@ -40,14 +40,14 @@ void my_program(libtrace_t *trace, libtrace_packet_t *packet, char* argv[]) {
     READ_PCAP = argv[1];
     double REPORT_TIME = atof(argv[2]);
     bool VERBOSE       = atoi(argv[3]);
-    int  ONE_BINSIZE   = atoi(argv[4]);
+    int  POWEROF2   = atoi(argv[4]);
     double next_report = 0;
     double prepkt_time = 0;
     int    time_step   = 0;
     /* Output parameters */
     printf("Read file        : %s\n", READ_PCAP);
     printf("Observation time : %f\n", REPORT_TIME);
-    printf("One bin size     : %d [micro sec]\n", ONE_BINSIZE);
+    printf("Power of 2       : %d\n", POWEROF2);
 
     bin = (uint64_t*)calloc(BIN, sizeof(uint64_t));
     int now_binsize = BIN;
@@ -69,20 +69,18 @@ void my_program(libtrace_t *trace, libtrace_packet_t *packet, char* argv[]) {
         /* Get timestamp */
         double ts = trace_get_seconds(packet);
         double ts_m = ts/10e-6;
+        
         /* Process each packet */
         if (prepkt_time == 0) prepkt_time = ts_m;
         else {
             double diff_time = ts_m - prepkt_time; // micro seconds
-            //double bin_size = pow(2,4);
-            //double bin_size = 2;
+            int pos = (int)diff_time >> POWEROF2;
+            /* debag */ 
+            //double bin_size = pow(2,POWEROF2);
             //int pos = diff_time/bin_size;
-
-            double bin_size = ONE_BINSIZE;
-            //int pos = (int)diff_time >> (int)bin_size;
-            int pos = diff_time/bin_size;
+            
             while(pos >= now_binsize) {
                 now_binsize += BIN;
-                printf("%d\n", now_binsize);
                 bin = (uint64_t*)realloc(bin, sizeof(uint64_t)*now_binsize);
             }
             bin[pos]++;
@@ -111,8 +109,9 @@ void my_program(libtrace_t *trace, libtrace_packet_t *packet, char* argv[]) {
     FILE *outfilebin;
     char outbin[100] = "./output/csv/bin";
     strcat(outbin, argv[2]);
-    strcat(outbin, argv[3]);
-    strcat(outbin, "ms.csv");
+    strcat(outbin, "_");
+    strcat(outbin, argv[4]);
+    strcat(outbin, "power.csv");
     outfilebin     = fopen(outbin, "w");
     int i;
     

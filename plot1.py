@@ -96,7 +96,7 @@ def FigBin():
         bins = np.arange(0, len(data_bin[0]))
         plt.yscale('log')
         plt.bar(bins, data_bin[0])
-        outfilename  = "./output/png/lastbin{}.png".format(args.time)
+        outfilename  = "./output/png/lastbin{}_{}power.png".format(args.time, args.power)
         plt.savefig(outfilename, bbox_inches="tight", pad_inches=0.05)
     else:
         time_step = 0
@@ -139,7 +139,7 @@ def FigBar():
             #plt.show()
             #return fig, ax
             break
-    outfilename  = "./output/png/bin{}.png".format(args.time)
+    outfilename  = "./output/png/bin{}_power{}.png".format(args.time, args.power)
     print("Take many time...")
     plt.savefig(outfilename, bbox_inches="tight", pad_inches=0.05)
     #return fig, ax
@@ -164,8 +164,8 @@ def main(args):
     plt.savefig(outfilename, bbox_inches="tight", pad_inches=0.05)
     
     
-    readfilename_bin = "./output/csv/bin{}.csv".format(args.time)
-    outfilename  = "./output/png/bin{}.png".format(args.time)
+    readfilename_bin = "./output/csv/bin{}_{}power.csv".format(args.time, args.power)
+    #outfilename  = "./output/png/bin{}.png".format(args.time, args.bins)
     data_bin   = FigReadSpace(readfilename_bin)
     FigParams()                        # Set params
     
@@ -176,6 +176,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser("Output the result using matplotlib.")
     parser.add_argument("-t", "--time", help="Observation time, report time", default=1, type=float)
     parser.add_argument("-v", "--verbose", help="verbose mode", default=0, type=int)
+    parser.add_argument("-p", "--power", help="What is the powr of 2?", default=1, type=int)
     args = parser.parse_args()
     if args.time >= 1:
         args.time = int(args.time)
