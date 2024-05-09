@@ -8,3 +8,4 @@ data/
 *.o
 pkt.o.dSYM/
 main_cms.c
+output/csv/

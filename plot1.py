@@ -1,10 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
-
 import argparse
 import time
 import json
+
 
 def FigParams():
     plt.rcParams['font.size']            = 25
@@ -30,13 +30,23 @@ def FigRead(readfilename):
     return data    
 def FigReadSpace(readfilename):
     all_data = []
+    global y_max
+    y_max = 1e-20
+    data_len = sum([1 for _ in open(readfilename)])
     with open(readfilename) as f:
         for line in f:
             data_line = line.split(' ')
             data = []
             for val in data_line:
                 if val != '\n' and val != '':
-                    data.append(int(val))
+                    if val == '0':
+                        data.append(0)
+                    else:
+                        if args.log and data_len > 1:
+                            data.append(np.log10(int(val)))
+                        else:
+                            data.append(int(val))
+                        y_max = max(y_max, int(val))
             all_data.append(data)
     return np.array(all_data)
 def FigGet(ver, hor):
@@ -91,58 +101,54 @@ def FigBin():
     dshape = data_bin.shape
     if dshape[0] == 1:
         fig, fig1  = FigGet(ver=10, hor=5) # Set fig
-        fig1.set_xlabel('bins (IAT)', fontsize=25)
-        fig1.set_ylabel('Frequency', fontsize=25)
+        FigParams()                        # Set params
+        fig1.set_xlabel(r'Each bin size = {} [$\mu$s]'.format(2**args.power), fontsize=25, math_fontfamily='cm')
+        
         bins = np.arange(0, len(data_bin[0]))
-        plt.yscale('log')
+        if args.log:
+            plt.yscale('log')
+            fig1.set_ylabel(r'Frequency', fontsize=25, math_fontfamily='cm')
+            fig1.set_ylim([10,y_max*10])
+            outfilename  = "./output/png/lastbin{}_{}powerlog.png".format(args.time, args.power)
+        else:
+            fig1.set_ylabel('Frequency', fontsize=25)
+            fig1.set_ylabel(r'Frequency', fontsize=25, math_fontfamily='cm')
+            outfilename  = "./output/png/lastbin{}_{}power.png".format(args.time, args.power)
         plt.bar(bins, data_bin[0])
-        outfilename  = "./output/png/lastbin{}_{}power.png".format(args.time, args.power)
+        
         plt.savefig(outfilename, bbox_inches="tight", pad_inches=0.05)
     else:
         time_step = 0
+        fig = plt.figure(figsize=(10,10))
+        FigParams()                        # Set params
+
+        plt.rcParams['axes.labelpad'] = 15
+        #print(rcParams.keys())
+        """
+        for ii in rcParams.keys():
+            if 'scale' in ii:
+                print(ii)
+        """
+        fig1 = fig.add_subplot(111, projection='3d', computed_zorder=False)
+        fig1.set_xlabel(r'Each bin size = {} [$\mu$s]'.format(2**args.power), fontsize=25, math_fontfamily='cm')
+        fig1.set_ylabel('Timestep', fontsize=25)
+        if args.log:
+            fig1.set_zlabel(r'Frequency ($10^z$)', fontsize=25, math_fontfamily='cm')
+        else:
+            fig1.set_zlabel(r'Frequency', fontsize=25, math_fontfamily='cm')
+            fig1.ticklabel_format(style="sci", axis='z', scilimits=(0,0))
+        fig1.view_init(elev=30, azim=-60)
+        
         for one_data in data_bin:
-            fig, fig1  = FigGet(ver=10, hor=5) # Set fig
-            fig1.set_xlabel('bins (IAT)', fontsize=25)
-            fig1.set_ylabel('Frequency', fontsize=25)
             bins = np.arange(0, len(one_data))
-            plt.bar(bins, one_data)
-            outfilename  = "./output/png/bin_ts{}.png".format(time_step)
-            plt.savefig(outfilename, bbox_inches="tight", pad_inches=0.05)
+            plt.bar(bins, one_data, zs=time_step, zorder=-time_step, zdir='y', color='red', edgecolor='k', linewidth=0.2)
             time_step += 1
+        if args.log:
+            outfilename  = "./output/png/allbin{}_{}powerlog.png".format(args.time, args.power)
+        else:
+            outfilename  = "./output/png/allbin{}_{}power.png".format(args.time, args.power)
+        plt.savefig(outfilename, bbox_inches="tight", pad_inches=0.8)
 
-def FigBar():
-    global args
-    fig = plt.figure(figsize=(7,7))
-    ax = fig.add_subplot(111, projection='3d')
-    bin_size = 16
-    iat_max = 0
-    print("Checking bins...")
-    for i in data_bin.keys():
-        try:
-            ## Inter-arival time
-            iat = data_bin[i]
-            my_time = np.full(len(data_bin[i]), float(i))
-            hist, xedges, yedges = np.histogram2d(my_time, iat, bins=10)
-
-            xpos, ypos = np.meshgrid(yedges[:-1], xedges[:-1])
-            zpos = 0
-            dx = (xpos[0][1] - xpos[0][0])/10
-            dy = (ypos[1][0] - ypos[0][0])/100
-            dz = hist.ravel()
-
-            xpos = xpos.ravel()
-            ypos = ypos.ravel()
-
-            ax.bar3d(xpos, ypos, zpos, dx, dy, dz, color='red')
-        except KeyboardInterrupt:
-            print(" stop. timestep: {}".format(i))
-            #plt.show()
-            #return fig, ax
-            break
-    outfilename  = "./output/png/bin{}_power{}.png".format(args.time, args.power)
-    print("Take many time...")
-    plt.savefig(outfilename, bbox_inches="tight", pad_inches=0.05)
-    #return fig, ax
 ## -----------------------------------------------------------------------
 def main(args):
     global data, data_bin, fig, fig1
@@ -163,12 +169,12 @@ def main(args):
     fig1.legend(ncol=4)         # Number of legends
     plt.savefig(outfilename, bbox_inches="tight", pad_inches=0.05)
     
-    
     readfilename_bin = "./output/csv/bin{}_{}power.csv".format(args.time, args.power)
-    #outfilename  = "./output/png/bin{}.png".format(args.time, args.bins)
     data_bin   = FigReadSpace(readfilename_bin)
-    FigParams()                        # Set params
-    
+    FigBin()
+
+    readfilename_bin = "./output/csv/allbin{}_{}power.csv".format(args.time, args.power)
+    data_bin   = FigReadSpace(readfilename_bin)
     FigBin()
     
 
@@ -177,6 +183,7 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--time", help="Observation time, report time", default=1, type=float)
     parser.add_argument("-v", "--verbose", help="verbose mode", default=0, type=int)
     parser.add_argument("-p", "--power", help="What is the powr of 2?", default=1, type=int)
+    parser.add_argument("-l", "--log", help="log", default=False, action='store_true')
     args = parser.parse_args()
     if args.time >= 1:
         args.time = int(args.time)

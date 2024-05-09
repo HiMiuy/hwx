@@ -7,6 +7,9 @@ uint64_t countv4 = 0;
 uint64_t countv6 = 0;
 //uint64_t bin[BIN];
 uint64_t *bin;
+uint64_t *eachbin;
+int now_binsize;
+
 void libtrace_cleanup(libtrace_t *trace, libtrace_packet_t *packet) {
     if (trace)
         trace_destroy(trace);
@@ -14,8 +17,15 @@ void libtrace_cleanup(libtrace_t *trace, libtrace_packet_t *packet) {
         trace_destroy_packet(packet);
 }
 
-void output_csv(FILE* file1, double time1, int time2) {
+void output_csv(FILE* file1, FILE* file2, double time1, int time2) {
     fprintf(file1, "%f, %d, %lld, %lld\n", time1, time2, countv4, countv6);
+    int i;
+    //fprintf(file2, "%d ", time2);
+    for (i = 0; i < now_binsize; i++) {
+        fprintf(file2, "%lld ", eachbin[i]);
+        eachbin[i] = 0; // to 0
+    }
+    fprintf(file2, "\n");
 }
 
 void per_packet(libtrace_packet_t *packet) {
@@ -50,16 +60,25 @@ void my_program(libtrace_t *trace, libtrace_packet_t *packet, char* argv[]) {
     printf("Power of 2       : %d\n", POWEROF2);
 
     bin = (uint64_t*)calloc(BIN, sizeof(uint64_t));
-    int now_binsize = BIN;
+    eachbin = (uint64_t*)calloc(BIN, sizeof(uint64_t));
+    now_binsize = BIN;
 
     FILE *outfile;
     char outstr[100] = "./output/csv/time_pkts";
     strcat(outstr, argv[2]);
     strcat(outstr, ".csv");
 
+    FILE *allbin;
+    char allbinstr[100] = "./output/csv/allbin";
+    strcat(allbinstr, argv[2]);
+    strcat(allbinstr, "_");
+    strcat(allbinstr, argv[4]);
+    strcat(allbinstr, "power.csv");
+
     printf("%s\n", outstr);
     
-    outfile        = fopen(outstr, "w");
+    outfile = fopen(outstr, "w");
+    allbin  = fopen(allbinstr, "w");
     if (outfile == NULL) {
         printf("cannot open.\n");
         exit(1);
@@ -82,8 +101,10 @@ void my_program(libtrace_t *trace, libtrace_packet_t *packet, char* argv[]) {
             while(pos >= now_binsize) {
                 now_binsize += BIN;
                 bin = (uint64_t*)realloc(bin, sizeof(uint64_t)*now_binsize);
+                eachbin = (uint64_t*)realloc(eachbin, sizeof(uint64_t)*now_binsize);
             }
             bin[pos]++;
+            eachbin[pos]++;
             prepkt_time = ts_m;
         }
         per_packet(packet);
@@ -98,7 +119,7 @@ void my_program(libtrace_t *trace, libtrace_packet_t *packet, char* argv[]) {
                 printf("TimeStep: %d ", time_step);
                 printf("\tThe number of IPv4 packets: %lld\n", countv4);
             }
-            output_csv(outfile, next_report, time_step);
+            output_csv(outfile, allbin, next_report, time_step);
             countv4 = 0;
             countv6 = 0;
             next_report += REPORT_TIME;
