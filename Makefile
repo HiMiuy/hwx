@@ -1,22 +1,36 @@
-CC = gcc
-CFLAGS = -Wall -g -O2 -lm
+CC      = gcc
+CFLAGS  = -Wall -g -O2 -lm
 LTRACEF = -ltrace
 INCLUDE = -I./mylib
-PKT_SOURCE = ./mylib/myltrace.c ./mylib/myhash.c
-PKT_HEADER = $(patsubst %.c,%.h, $(PKT_SOURCE))
-FILENAME   ="../../data/mawi/201902011400.pcap"
-REPORT_TIME= 1
-VERBOSE = 0
-POWEROF2=2  # the power of 2
-ARGS = $(FILENAME) $(REPORT_TIME) $(VERBOSE) $(POWEROF2)
+TGT     = pkt
+## About source
+SRCDIR = mylib/
+SRCS   = $(wildcard $(SRCDIR)*.c)
+## About object
+OBJDIR  = obj/
+OBJS    = $(patsubst %.c, %.o,$(SRCS))
+## Parameters
+FILENAME    ="../../data/mawi/201902011400.pcap"
+REPORT_TIME = 1  # Observation time
+VERBOSE     = 0  # printf() in C if 1
+POWEROF2    = 2  # the power of 2
+ARGS        = $(FILENAME) $(REPORT_TIME) $(VERBOSE) $(POWEROF2)
 
-all: pktrun #cmsrun
+.PHONY: .c.o
+.c.o :
+	$(CC) $(INCLUDE) $(LTRACEF) $(CFLAGS) -o $@ -c $< 
 
-pktrun: pkt
-	./pkt.o $(ARGS)
+.PHONY: $(TGT)
+$(TGT): $(OBJS) main_pkt.o
+	$(CC) $(INCLUDE) $(LTRACEF) $(CFLAGS) $(OBJS) main_pkt.o -o $(TGT)
+	
+.PHONY: exe
+exe: $(TGT)
+	./$(TGT) $(ARGS)
 
-pkt: $(PKT_SOURCE) $(PKT_HEADER) main_pkt.c
-	$(CC) $(INCLUDE) $(LTRACEF) $(PKT_SOURCE) $(CFLAGS) main_pkt.c -o pkt.o
-
+.PHONY: clean
 clean:
-	rm -f *.o
+	rm -f $(OBJDIR)*.o $(SRCDIR)*.o *.o $(TGT) a.out
+
+.PHONY: all
+all: clean $(OBJS) $(TGT) 

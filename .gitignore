@@ -6,6 +6,7 @@ bashf.sh
 output/csv/*.json
 data/
 *.o
-pkt.o.dSYM/
+*.dSYM/
 main_cms.c
 output/csv/
+pkt

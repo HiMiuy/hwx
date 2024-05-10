@@ -24,12 +24,15 @@ source .venv/bin/activate
 2. Execute program with:
 ```bash
 # The result is placed in ./output
+## bash
 bash make.sh (See bash file before run) 
 or
+## make
 make POWEROF2=2 (Specify a single argument)
 make ARGS="./place/of/data.pcap 1 0 1" (Specify multi arguments)
     -> ("filename of pcap" "observation time" "verbose" "power of 2")
 or
+## cmake
 ./build/main_pkt "filename of pcap" "observation time" "verbose" "power of 2"
 python plot1.py -t "observation time" -v "verbose" -p "power" --log
 ```
