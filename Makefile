@@ -1,3 +1,4 @@
+## Reference: https://qiita.com/Tanoren/items/f8c843a05455f593249f
 CC      = gcc
 CFLAGS  = -Wall -g -O2 -lm
 LTRACEF = -ltrace
