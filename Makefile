@@ -1,4 +1,5 @@
 ## Reference: https://qiita.com/Tanoren/items/f8c843a05455f593249f, https://qiita.com/thaladabar/items/1f72a3359acb5cf7428e
+## Parameter Ref: https://ksaito.blog/2020-04-24-102112/
 CC      = gcc
 CFLAGS  = -Wall -g -O2 -lm
 LTRACEF = -ltrace

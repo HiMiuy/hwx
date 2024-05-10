@@ -32,7 +32,7 @@ make exe POWEROF2=2 (Specify a single argument)
 make exe PCAP="./file.pcap" TIME=1 VERBOSE=0 POWEROF2=1 (Specify multi arguments)
 or
 ## cmake
-./build/main_pkt PCAP="./file.pcap" TIME=1 VERBOSE=0 POWEROF2=1
+./build/main_pkt "./file.pcap" 1 0 1
 python plot1.py -t 1 -v 0 -p 1 --log
 ```
 
