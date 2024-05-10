@@ -108,7 +108,7 @@ def FigBin():
         if args.log:
             plt.yscale('log')
             fig1.set_ylabel(r'Frequency', fontsize=25, math_fontfamily='cm')
-            fig1.set_ylim([10,y_max*10])
+            fig1.set_ylim([1,y_max*10])
             outfilename  = "./output/png/lastbin{}_{}powerlog.png".format(args.time, args.power)
         else:
             fig1.set_ylabel('Frequency', fontsize=25)

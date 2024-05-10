@@ -28,13 +28,12 @@ source .venv/bin/activate
 bash make.sh (See bash file before run) 
 or
 ## make
-make POWEROF2=2 (Specify a single argument)
-make ARGS="./place/of/data.pcap 1 0 1" (Specify multi arguments)
-    -> ("filename of pcap" "observation time" "verbose" "power of 2")
+make exe POWEROF2=2 (Specify a single argument)
+make exe PCAP="./file.pcap" TIME=1 VERBOSE=0 POWEROF2=1 (Specify multi arguments)
 or
 ## cmake
-./build/main_pkt "filename of pcap" "observation time" "verbose" "power of 2"
-python plot1.py -t "observation time" -v "verbose" -p "power" --log
+./build/main_pkt PCAP="./file.pcap" TIME=1 VERBOSE=0 POWEROF2=1
+python plot1.py -t 1 -v 0 -p 1 --log
 ```
 
 3. Clean up env with:
