@@ -26,14 +26,19 @@ source .venv/bin/activate
 # The result is placed in ./output
 ## bash
 bash make.sh (See bash file before run) 
+```
 or
+```bash
 ## make
 make exe POWEROF2=2 (Specify a single argument)
 make exe PCAP="./file.pcap" TIME=1 VERBOSE=0 POWEROF2=1 (Specify multi arguments)
+```
 or
+```bash
 ## cmake
 ./build/main_pkt "./file.pcap" 1 0 1
-python plot1.py -t 1 -v 0 -p 1 --log
+python plot1.py -t 1 -v 0 -p 1 --log (yaxis is log-scale)
+python plot1.py -t 1 -v 0 -p 1       (yaxis is normal)
 ```
 
 3. Clean up env with:
