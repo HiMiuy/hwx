@@ -24,10 +24,14 @@ source .venv/bin/activate
 2. Execute program with:
 ```bash
 # The result is placed in ./output
-bash make.sh
+bash make.sh (See bash file before run) 
 or
-./build/main_pkt "filename of pcap" "observation time" "verbose"
-python plot1.py -t "observation time" -v "verbose"
+make POWEROF2=2 (Specify a single argument)
+make ARGS="./place/of/data.pcap 1 0 1" (Specify multi arguments)
+    -> ("filename of pcap" "observation time" "verbose" "power of 2")
+or
+./build/main_pkt "filename of pcap" "observation time" "verbose" "power of 2"
+python plot1.py -t "observation time" -v "verbose" -p "power" --log
 ```
 
 3. Clean up env with:
